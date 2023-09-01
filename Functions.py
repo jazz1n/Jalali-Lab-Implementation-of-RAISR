@@ -102,7 +102,9 @@ def modcrop(im,modulo):
 def Prepare(im, patchSize, R):
     patchMargin = floor(patchSize/2)
     H, W = im.shape
-    imL = resize(im, 1 / R, order=3, anti_aliasing=True)
+    new_height = H / R
+    new_width = W / R
+    imL = resize(im, (new_height, new_width), order=3, anti_aliasing=True)
     # cv2.imwrite('Compressed.jpg', imL, [int(cv2.IMWRITE_JPEG_QUALITY), 85])
     # imL = cv2.imread('Compressed.jpg')
     # imL = imL[:,:,0]   # Optional: Compress the image

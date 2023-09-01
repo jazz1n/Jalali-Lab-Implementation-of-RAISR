@@ -34,8 +34,8 @@ import warnings
 import pickle
 import time
 from math import floor
-from skimage.measure import compare_psnr
-from scipy.misc import imresize
+from skimage.metrics import peak_signal_noise_ratio
+from skimage.transform import resize
 from Functions import *
 import matplotlib.image as mpimg
 from multiprocessing import Pool
@@ -131,10 +131,12 @@ for image in filelist:
         im = im_uint8
     im_double = im2double(im)
     H, W = im.shape
+    new_height = H / R
+    new_width = W / R
     region = (slice(patchMargin, H - patchMargin), slice(patchMargin, W - patchMargin))
     start = time.time()
-    imL = imresize(im_double, 1 / R, interp='bicubic', mode='F')
-    im_bicubic = imresize(imL, (H, W), interp='bicubic', mode='F')
+    imL = resize(im_double, (new_height, new_width), mode='reflect', order=3, anti_aliasing=True)
+    im_bicubic = resize(imL, (H, W), mode='reflect', order=3, anti_aliasing=True)
     im_bicubic = im_bicubic.astype('float64')
     im_bicubic = np.clip(im_bicubic, 0, 1)
     im_LR = np.zeros((H+patchSize-1,W+patchSize-1))
@@ -184,9 +186,9 @@ for image in filelist:
     im_blending = im_blending * 255
     im_blending = np.rint(im_blending).astype('uint8')
 
-    PSNR_bicubic = compare_psnr(im[region], im_bicubic[region])
-    PSNR_result = compare_psnr(im[region], im_result[region])
-    PSNR_blending = compare_psnr(im[region], im_blending[region])
+    PSNR_bicubic = peak_signal_noise_ratio(im[region], im_bicubic[region])
+    PSNR_result = peak_signal_noise_ratio(im[region], im_result[region])
+    PSNR_blending = peak_signal_noise_ratio(im[region], im_blending[region])
     PSNR_blending = max(PSNR_result, PSNR_blending)
 
     createFolder('./results/')
@@ -206,4 +208,3 @@ print('\r', end='')
 print('' * 60, end='')
 print('\r RAISR PSNR of '+ testPath +' is ' + str(RAISR_psnrmean))
 print('\r Bicubic PSNR of '+ testPath +' is ' + str(Bicubic_psnrmean))
-

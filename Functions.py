@@ -1,5 +1,5 @@
 import cv2
-from scipy.misc import imresize
+from skimage.transform import resize
 from scipy.signal import convolve2d
 import numpy as np
 from math import atan2, floor, pi, ceil, isnan
@@ -102,11 +102,11 @@ def modcrop(im,modulo):
 def Prepare(im, patchSize, R):
     patchMargin = floor(patchSize/2)
     H, W = im.shape
-    imL = imresize(im, 1 / R, interp='bicubic')
+    imL = resize(im, 1 / R, order=3, anti_aliasing=True)
     # cv2.imwrite('Compressed.jpg', imL, [int(cv2.IMWRITE_JPEG_QUALITY), 85])
     # imL = cv2.imread('Compressed.jpg')
     # imL = imL[:,:,0]   # Optional: Compress the image
-    imL = imresize(imL, (H, W), interp='bicubic')
+    imL = resize(imL, (H, W), order=3, anti_aliasing=True)
     imL = im2double(imL)
     im_LR = imL
     return im_LR
@@ -222,9 +222,9 @@ def Backprojection(LR, HR, maxIter):
     w = w**2
     w = w/sum(np.ravel(w))
     for i in range(maxIter):
-        im_L = imresize(HR, (H, W), interp='bicubic', mode='F')
+        im_L = resize(HR, (H, W), order=3, mode='reflect', anti_aliasing=True)
         imd = LR - im_L
-        im_d = imresize(imd, (H1, W1), interp='bicubic', mode='F')
+        im_d = resize(imd, (H1, W1), order=3, mode='reflect', anti_aliasing=True)
         HR = HR + convolve2d(im_d, w, 'same')
     return HR
 

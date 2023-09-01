@@ -20,7 +20,7 @@ Author: Sifeng He, Jalali-Lab, Department of Electrical and Computer Engineering
 
 Dependencies
 All the dependent Python modules needed for the using our RAISR implementation can be installed 
-using pip package manager and are the following:
+using pip package manager and are the following:
 
 *  NumPy
 *  Numba

@@ -121,7 +121,8 @@ def is_greyimage(im):
     else:
         return False
 
-@nb.jit(nopython=True, parallel=True)
+# removed this part of jit arguments(, parallel=True)
+@nb.jit(nopython=True)
 def Grad(patchX,patchY,weight):
     gx = patchX.ravel()
     gy = patchY.ravel()
@@ -136,7 +137,8 @@ def Grad(patchX,patchY,weight):
     u = (np.sqrt(w[0]) - np.sqrt(w[1]))/(np.sqrt(w[0]) + np.sqrt(w[1]) + 0.00000000000000001)
     return lamda,u
 
-@nb.jit(nopython=True, parallel=True)
+# removed this part of jit arguments(, parallel=True)
+@nb.jit(nopython=True)
 def HashTable(patchX,patchY,weight, Qangle,Qstrength,Qcoherence,stre,cohe):
     assert (len(stre)== Qstrength-1) and (len(cohe)==Qcoherence-1),"Quantization number should be equal"
     gx = patchX.ravel()
@@ -164,7 +166,8 @@ def HashTable(patchX,patchY,weight, Qangle,Qstrength,Qcoherence,stre,cohe):
     u = np.searchsorted(cohe,u)
     return theta,lamda,u
 
-@nb.jit(nopython=True, parallel=True)
+# removed this part of jit arguments(, parallel=True)
+@nb.jit(nopython=True)
 def Gaussian_Mul(x,y,wGaussian):
     result = np.zeros((x.shape[0], x.shape[1], y.shape[2]))
     for i in range(x.shape[0]):
@@ -349,8 +352,9 @@ def Getfromsymmetry2(V, patchSize, t1, t2):
     V_sym = np.ravel(V1)
     return V_sym
 
+
 # Quantization procedure to get the optimized strength and coherence boundaries
-@nb.jit(nopython=True, parallel=True)
+@nb.jit(nopython=True)
 def QuantizationProcess (im_GX, im_GY,patchSize, patchNumber,w , quantization):
     H, W = im_GX.shape
     for i1 in range(H-2*floor(patchSize/2)):
@@ -364,8 +368,9 @@ def QuantizationProcess (im_GX, im_GY,patchSize, patchNumber,w , quantization):
             patchNumber += 1
     return quantization, patchNumber
 
+# removed this part of jit arguments(, parallel=True)
 # Training procedure for each image (use numba.jit to speed up)
-@nb.jit(nopython=True, parallel=True)
+@nb.jit(nopython=True)
 def TrainProcess (im_LR, im_HR, im_GX, im_GY,patchSize, w, Qangle, Qstrength,Qcoherence, stre, cohe, R, Q, V, mark):
     H, W = im_HR.shape
     for i1 in range(H-2*floor(patchSize/2)):

@@ -51,13 +51,13 @@ Qangle = 24  # Quantization factor of angle =24
 Qstrength = 3  # Quantization factor of strength =3
 Qcoherence = 3  # Quantization factor of coherence =3
 
-with open("Filters/filter"+str(R), "rb") as fp:
+with open("MyFilters/filter"+str(R), "rb") as fp:
     h = pickle.load(fp)
 
-with open("Filters/Qfactor_str"+str(R), "rb") as sp:
+with open("MyFilters/Qfactor_str"+str(R), "rb") as sp:
     stre = pickle.load(sp)
 
-with open("Filters/Qfactor_coh"+str(R), "rb") as cp:
+with open("MyFilters/Qfactor_coh"+str(R), "rb") as cp:
     cohe = pickle.load(cp)
 
 filelist = make_dataset(testPath)

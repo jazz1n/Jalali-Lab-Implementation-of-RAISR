@@ -170,7 +170,7 @@ with open("Qfactor_str"+str(R), "wb") as sp:
 with open("Qfactor_coh"+str(R), "wb") as cp:
     pickle.dump(cohe, cp)
 
-
+# Print when finished training
 print('\r', end='')
 print(' ' * 60, end='')
 print('\rFinished.')
